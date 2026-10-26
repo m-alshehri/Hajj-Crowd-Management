@@ -80,6 +80,8 @@ body {
 .page { max-width: 1280px; margin: 0 auto; padding: 24px 16px 40px; }
 
 h1 { font-size: 26px; margin: 0 0 4px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.lang { flex: none; font-weight: 600; }
 h2 { font-size: 16px; margin: 0; }
 .subtitle { margin: 2px 0 0; color: var(--text-secondary); font-size: 14px; }
 
@@ -135,7 +137,7 @@ button:disabled { color: var(--text-muted); cursor: default; }
 .card.wide { grid-column: 1 / -1; }
 .chart { width: 100%; direction: ltr; }
 .recharts-legend-item-text { color: var(--text-secondary) !important; }
-.recharts-default-legend { direction: rtl; }
+[dir="rtl"] .recharts-default-legend { direction: rtl; }
 
 .location { display: flex; flex-direction: column; gap: 10px; }
 .segmented { display: flex; gap: 6px; }
@@ -149,12 +151,13 @@ button:disabled { color: var(--text-muted); cursor: default; }
 .compass.e { right: 0; top: 50%; }
 .hover-readout { font-size: 13px; color: var(--text-secondary); margin: 0; min-height: 40px; }
 .ramp-legend { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
-.ramp { flex: 0 0 160px; height: 8px; border-radius: 4px; background: linear-gradient(to left, var(--seq-lo), var(--seq-hi)); }
+.ramp { flex: 0 0 160px; height: 8px; border-radius: 4px; background: linear-gradient(to right, var(--seq-lo), var(--seq-hi)); }
+[dir="rtl"] .ramp { background: linear-gradient(to left, var(--seq-lo), var(--seq-hi)); }
 
 .table-head { display: flex; justify-content: space-between; align-items: center; }
 .table-wrap { overflow-x: auto; margin-top: 12px; }
 table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
-th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th, td { text-align: start; padding: 6px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
 th { color: var(--text-secondary); font-weight: 600; }
 
 .state { padding: 48px 16px; text-align: center; color: var(--text-secondary); }
@@ -166,4 +169,4 @@ th { color: var(--text-secondary); font-weight: 600; }
   select { min-width: 0; width: 100%; }
   h1 { font-size: 22px; }
 }
-.recharts-legend-item svg { margin-left: 6px; }
+.recharts-legend-item svg { margin-inline-end: 6px; }

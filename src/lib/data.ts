@@ -84,60 +84,11 @@ function toRecord(r: Raw): Observation | null {
 
 export async function loadRecords(url = DATA_URL): Promise<Observation[]> {
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`تعذر تحميل البيانات (${res.status})`);
+  if (!res.ok) throw new Error(String(res.status));
   const text = await res.text();
   const parsed = Papa.parse<Raw>(text, { header: true, skipEmptyLines: true });
   return parsed.data.map(toRecord).filter((r): r is Observation => r !== null);
 }
-
-// Arabic display labels for the dataset's English category values.
-export const AR: { [value: string]: string } = {
-  Low: "منخفضة",
-  Medium: "متوسطة",
-  High: "عالية",
-  Walking: "مشي",
-  Resting: "استراحة",
-  "Sa’i": "السعي",
-  Tawaf: "الطواف",
-  Prayer: "الصلاة",
-  Clear: "صافٍ",
-  Cloudy: "غائم",
-  Rainy: "ممطر",
-  Heatstroke: "ضربة شمس",
-  Injured: "إصابة",
-  Normal: "طبيعي",
-  Dehydration: "جفاف",
-  Fainting: "إغماء",
-  Other: "أخرى",
-  Pakistani: "باكستاني",
-  Saudi: "سعودي",
-  Egyptian: "مصري",
-  Indonesian: "إندونيسي",
-  Indian: "هندي",
-  Car: "سيارة",
-  Train: "قطار",
-  Bus: "حافلة",
-  Theft: "سرقة",
-  "Security Breach": "خرق أمني",
-  "Unruly Behavior": "سلوك غير منضبط",
-  "Lost Item": "مفقودات",
-  "Medical Emergency": "حالة طبية طارئة",
-  Positive: "إيجابية",
-  Neutral: "محايدة",
-  Negative: "سلبية",
-  Experienced: "سبق له الحج",
-  "First-Time": "أول مرة",
-  "Religious Activity": "نشاط ديني",
-  "Transport Delay": "تأخر النقل",
-  "Crowd Congestion": "ازدحام",
-  Started: "بدأ",
-  "In Progress": "قيد التنفيذ",
-  Completed: "اكتمل",
-};
-
-export const ar = (v: string) => AR[v] ?? v;
-
-export const MONTHS_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
 export const LEVELS: Level[] = ["Low", "Medium", "High"];
 

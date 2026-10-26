@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { fmt, pct, type Observation } from "../lib/data";
+import { useLang } from "../lib/i18n";
 
 const N = 10;
 
@@ -20,6 +21,7 @@ const valueOf = (c: Cell, metric: Metric) => (metric === "count" ? c.count : c.c
 export function LocationGrid({ data }: { data: Observation[] }) {
   const [metric, setMetric] = useState<Metric>("count");
   const [hover, setHover] = useState<Cell | null>(null);
+  const { t } = useLang();
 
   const { cells, min, max } = useMemo(() => {
     if (!data.length) return { cells: [] as Cell[], min: 0, max: 0 };
@@ -53,32 +55,37 @@ export function LocationGrid({ data }: { data: Observation[] }) {
 
   return (
     <div className="location">
-      <div className="segmented" role="group" aria-label="مؤشر الخريطة">
-        <button aria-pressed={metric === "count"} onClick={() => setMetric("count")}>عدد القراءات</button>
-        <button aria-pressed={metric === "high"} onClick={() => setMetric("high")}>نسبة الكثافة العالية</button>
+      <div className="segmented" role="group" aria-label={t.mapMetric}>
+        <button aria-pressed={metric === "count"} onClick={() => setMetric("count")}>{t.mapCount}</button>
+        <button aria-pressed={metric === "high"} onClick={() => setMetric("high")}>{t.mapHigh}</button>
       </div>
       <div className="grid-wrap">
-        <span className="compass n">شمال</span>
+        <span className="compass n">{t.north}</span>
         <div className="heat" style={{ gridTemplateColumns: `repeat(${N}, 1fr)` }} onMouseLeave={() => setHover(null)}>
           {cells.map((c) => {
-            const t = max > min ? (valueOf(c, metric) - min) / (max - min) : 0;
+            const shade = max > min ? (valueOf(c, metric) - min) / (max - min) : 0;
             return (
               <div
                 key={`${c.row}-${c.col}`}
                 className={`cell${hover === c ? " active" : ""}`}
-                style={{ background: `color-mix(in oklab, var(--seq-hi) ${Math.round(t * 100)}%, var(--seq-lo))` }}
+                style={{ background: `color-mix(in oklab, var(--seq-hi) ${Math.round(shade * 100)}%, var(--seq-lo))` }}
                 onMouseEnter={() => setHover(c)}
-                title={`${fmt(c.count, 0)} قراءة · ${pct(c.count ? c.high / c.count : NaN)} كثافة عالية`}
+                title={t.mapCellTitle(fmt(c.count, 0), pct(c.count ? c.high / c.count : NaN))}
               />
             );
           })}
         </div>
-        <span className="compass e">شرق</span>
+        <span className="compass e">{t.east}</span>
       </div>
       <p className="hover-readout">
         {hover
-          ? `خط العرض ${hover.latRange[0].toFixed(3)}–${hover.latRange[1].toFixed(3)} · خط الطول ${hover.longRange[0].toFixed(3)}–${hover.longRange[1].toFixed(3)} — ${fmt(hover.count, 0)} قراءة، ${pct(hover.count ? hover.high / hover.count : NaN)} منها بكثافة عالية`
-          : "مرّر المؤشر على خلية لعرض تفاصيلها"}
+          ? t.mapReadout(
+              `${hover.latRange[0].toFixed(3)}–${hover.latRange[1].toFixed(3)}`,
+              `${hover.longRange[0].toFixed(3)}–${hover.longRange[1].toFixed(3)}`,
+              fmt(hover.count, 0),
+              pct(hover.count ? hover.high / hover.count : NaN),
+            )
+          : t.mapHint}
       </p>
       <div className="ramp-legend">
         <span>{metric === "count" ? fmt(min, 0) : pct(min)}</span>
