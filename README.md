@@ -1,8 +1,8 @@
 # Hajj Crowd Management Dashboard
 
-لوحة تفاعلية باللغة العربية لاستكشاف بيانات إدارة حشود الحج والعمرة.
+لوحة تفاعلية بالعربية والإنجليزية لاستكشاف بيانات إدارة حشود الحج والعمرة.
 
-An Arabic (RTL) dashboard for the Kaggle dataset
+A bilingual (Arabic RTL / English LTR) dashboard for the Kaggle dataset
 [Hajj and Umrah Crowd Management Dataset](https://www.kaggle.com/datasets/ziya07/hajj-and-umrah-crowd-management-dataset)
 (10,000 readings, 30 columns, Makkah area, 2024).
 
@@ -13,6 +13,7 @@ An Arabic (RTL) dashboard for the Kaggle dataset
 - Average queue, transport and security-checkpoint waits by activity (Tawaf, Sa'i, prayer, ...).
 - A 10×10 location grid of reading counts or high-density share.
 - Health conditions, incident types during emergencies, and satisfaction / safety ratings by nationality.
+- An Arabic / English toggle in the header. The choice is remembered, and `?lang=en` or `?lang=ar` in the URL picks the language directly.
 - Filters for activity, crowd density, transport mode, nationality and weather, plus a raw-data preview.
 
 ## Run locally

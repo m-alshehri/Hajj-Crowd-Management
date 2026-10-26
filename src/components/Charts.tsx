@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import type { ReactNode } from "react";
+import { useLang } from "../lib/i18n";
 
 const axis = { stroke: "var(--axis)", tick: { fill: "var(--text-muted)", fontSize: 12 }, tickLine: false };
 const grid = <CartesianGrid stroke="var(--grid)" vertical={false} />;
@@ -20,7 +21,6 @@ const tooltipStyle = {
     border: "1px solid var(--border)",
     borderRadius: 8,
     color: "var(--text-primary)",
-    direction: "rtl" as const,
     fontSize: 13,
   },
   labelStyle: { color: "var(--text-primary)", fontWeight: 600 },
@@ -73,7 +73,7 @@ export function ColumnChart({
           <XAxis dataKey={xKey} {...axis} interval="preserveStartEnd" minTickGap={4} />
           <YAxis {...axis} axisLine={false} width={44} unit={unit} domain={[0, yMax ?? "auto"]} tickCount={yMax ? yMax + 1 : 5} />
           <Tooltip {...tooltipStyle} />
-          {series.length > 1 && <Legend wrapperStyle={{ fontSize: 13, color: "var(--text-secondary)" }} />}
+          {series.length > 1 && <Legend itemSorter={null} wrapperStyle={{ fontSize: 13, color: "var(--text-secondary)" }} />}
           {series.map((s, i) => (
             <Bar
               key={s.key}
@@ -94,16 +94,18 @@ export function ColumnChart({
   );
 }
 
+// Horizontal bars grow from the reading-start side: right in Arabic, left in English.
 export function RowChart({ data, color, unit, height = 240 }: { data: { label: string; value: number }[]; color: string; unit?: string; height?: number }) {
+  const { t, rtl } = useLang();
   return (
     <div className="chart" style={{ height }}>
       <ResponsiveContainer>
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 8, bottom: 0, left: 8 }}>
           <CartesianGrid stroke="var(--grid)" horizontal={false} />
-          <XAxis type="number" {...axis} reversed />
-          <YAxis type="category" dataKey="label" {...axis} axisLine={false} width={120} orientation="right" />
+          <XAxis type="number" {...axis} reversed={rtl} />
+          <YAxis type="category" dataKey="label" {...axis} axisLine={false} width={120} orientation={rtl ? "right" : "left"} />
           <Tooltip {...tooltipStyle} />
-          <Bar dataKey="value" name="العدد" fill={color} radius={[4, 0, 0, 4]} maxBarSize={22} unit={unit} />
+          <Bar dataKey="value" name={t.count} fill={color} radius={rtl ? [4, 0, 0, 4] : [0, 4, 4, 0]} maxBarSize={22} unit={unit} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -119,7 +121,7 @@ export function TrendChart({ data, xKey, series, unit, height = 280 }: { data: D
           <XAxis dataKey={xKey} {...axis} />
           <YAxis {...axis} axisLine={false} width={44} unit={unit} domain={[0, "auto"]} />
           <Tooltip {...tooltipStyle} cursor={{ stroke: "var(--axis)" }} />
-          {series.length > 1 && <Legend wrapperStyle={{ fontSize: 13 }} />}
+          {series.length > 1 && <Legend itemSorter={null} wrapperStyle={{ fontSize: 13 }} />}
           {series.map((s) => (
             <Line
               key={s.key}
